@@ -4,7 +4,6 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.EvaluationResult;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,57 +21,50 @@ class ViolationDetectionTest {
             .importPackages("com.brunosong.sample.archunit.fixture");
 
     @Test
-    @DisplayName("컨트롤러가 영속 엔티티를 직접 잡으면 레이어 규칙이 잡는다")
-    void layerDependency() {
-        assertThat(violationsOf(LayerRules.LAYER_DEPENDENCY))
+    void 컨트롤러가_영속_엔티티를_직접_잡으면_레이어_규칙이_잡는다() {
+        assertThat(위반내역(LayerRules.LAYER_DEPENDENCY))
                 .contains("LeakyOrderController");
     }
 
     @Test
-    @DisplayName("도메인에 JPA 애너테이션을 붙이면 잡는다")
-    void domainIsFrameworkFree() {
-        assertThat(violationsOf(LayerRules.DOMAIN_IS_FRAMEWORK_FREE))
+    void 도메인에_JPA_애너테이션을_붙이면_잡는다() {
+        assertThat(위반내역(LayerRules.DOMAIN_IS_FRAMEWORK_FREE))
                 .contains("FrameworkAwareOrder");
     }
 
     @Test
-    @DisplayName("dataaccess 밖에서 jakarta.persistence 를 쓰면 잡는다")
-    void persistenceStaysInDataaccess() {
-        assertThat(violationsOf(LayerRules.PERSISTENCE_STAYS_IN_DATAACCESS))
+    void dataaccess_밖에서_영속_애너테이션을_쓰면_잡는다() {
+        assertThat(위반내역(LayerRules.PERSISTENCE_STAYS_IN_DATAACCESS))
                 .contains("FrameworkAwareOrder")
                 .doesNotContain("FixtureOrderJpaEntity");
     }
 
     @Test
-    @DisplayName("레이어는 지켰지만 다른 서브도메인 내부를 잡으면 서브도메인 규칙이 잡는다")
-    void subdomainBoundary() {
-        assertThat(violationsOf(SubdomainRules.ORDER_TOUCHES_PRODUCT_ONLY_THROUGH_IN_PORT))
+    void 레이어는_지켰지만_다른_서브도메인_내부를_잡으면_잡는다() {
+        assertThat(위반내역(SubdomainRules.ORDER_TOUCHES_PRODUCT_ONLY_THROUGH_IN_PORT))
                 .contains("CrossSubdomainOrderService");
     }
 
     @Test
-    @DisplayName("in 포트 이름이 UseCase 로 끝나지 않으면 잡는다")
-    void inPortNaming() {
-        assertThat(violationsOf(NamingRules.IN_PORTS_ARE_USECASE_INTERFACES))
+    void in_포트_이름이_UseCase_로_끝나지_않으면_잡는다() {
+        assertThat(위반내역(NamingRules.IN_PORTS_ARE_USECASE_INTERFACES))
                 .contains("OrderFinder");
     }
 
     @Test
-    @DisplayName("out 포트 이름이 Port 로 끝나지 않으면 잡는다")
-    void outPortNaming() {
-        assertThat(violationsOf(NamingRules.OUT_PORTS_ARE_PORT_INTERFACES))
+    void out_포트_이름이_Port_로_끝나지_않으면_잡는다() {
+        assertThat(위반내역(NamingRules.OUT_PORTS_ARE_PORT_INTERFACES))
                 .contains("OrderStore");
     }
 
     @Test
-    @DisplayName("컨트롤러가 소비자 폴더 밖에 있으면 잡는다")
-    void controllerLocation() {
-        assertThat(violationsOf(NamingRules.CONTROLLERS_LIVE_IN_CONSUMER_PACKAGE))
+    void 컨트롤러가_소비자_폴더_밖에_있으면_잡는다() {
+        assertThat(위반내역(NamingRules.CONTROLLERS_LIVE_IN_CONSUMER_PACKAGE))
                 .contains("MisplacedOrderController")
                 .doesNotContain("LeakyOrderController");
     }
 
-    private static String violationsOf(ArchRule rule) {
+    private static String 위반내역(ArchRule rule) {
         EvaluationResult result = rule.evaluate(FIXTURE);
         assertThat(result.hasViolation())
                 .as("규칙이 위반을 잡아내야 한다: %s", rule.getDescription())
