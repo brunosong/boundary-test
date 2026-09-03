@@ -16,16 +16,20 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>boundary-test</name>
-    <description>ArchUnit 규칙과 그 규칙을 적용할 Spring 모놀리식 예제</description>
+    <description>아키텍처 경계를 빌드로 강제하는 방법들을 비교하는 샘플</description>
 
     <properties>
         <java.version>21</java.version>
         <archunit.version>1.5.0</archunit.version>
+        <!-- Spring Boot 가 Modulith 버전을 관리하지 않으므로 직접 고정한다.
+             1.4.x 가 Boot 3.5 계열용이다. 2.x 는 Boot 4.1 을 요구하므로 여기서는 못 쓴다. -->
+        <spring-modulith.version>1.4.13</spring-modulith.version>
     </properties>
 
     <modules>
         <module>target-service</module>
         <module>archunit-rules</module>
+        <module>modulith-sample</module>
     </modules>
 
     <dependencyManagement>
@@ -44,6 +48,13 @@
                 <groupId>com.tngtech.archunit</groupId>
                 <artifactId>archunit-junit5</artifactId>
                 <version>${archunit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.modulith</groupId>
+                <artifactId>spring-modulith-bom</artifactId>
+                <version>${spring-modulith.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
